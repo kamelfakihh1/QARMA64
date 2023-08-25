@@ -1,5 +1,6 @@
 // Copyright (c) 2019-2022 Phantom1003
 #include "QARMA64.h"
+#include <stdexcept>
 
 namespace QARMA64 {
 
@@ -295,6 +296,40 @@ text_t qarma64_dec(text_t plaintext, tweak_t tweak, key_t w0, key_t k0, int roun
 
 	is ^= w1;	
 	return is;
+}
+
+text_t sign_pointer(text_t pointer, tweak_t tweak){
+	
+
+
+	key_t w0 = 0x84be85ce9804e94b;
+	key_t k0 = 0xec2802d4e0a488e9;	
+	text_t ciphertext;
+	text_t signed_pointer;
+	text_t pac;
+
+	pointer = pointer & 0xFFFFFFFFFFFF; 
+	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
+	pac = ciphertext & 0xFFFF;
+	signed_pointer = pointer | (pac < 48);
+	return signed_pointer;
+}
+
+text_t verify_pointer(text_t signed_pointer, tweak_t tweak){
+	key_t w0 = 0x84be85ce9804e94b;
+	key_t k0 = 0xec2802d4e0a488e9;	
+	text_t ciphertext;
+	text_t pac;
+
+	text_t pointer = signed_pointer & 0xFFFFFFFFFFFF;
+	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
+	pac = ciphertext & 0xFFFF;
+
+	if((pointer | (pac < 48)) == signed_pointer){
+		return pointer;
+	}else{
+		throw std::runtime_error("Bad pointer");
+	}
 }
 
 }
