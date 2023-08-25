@@ -11,8 +11,8 @@ LIB_DIR   = $(BUILD_DIR)/lib
 
 TARGET    = libQarma64.a 
 
-SRC_FILES     = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES     = $(patsubst $(SRC_DIR)/%.c, $(OBJS_DIR)/%.o, $(SRC_FILES))
+SRC_FILES     = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES     = $(patsubst $(SRC_DIR)/%.cpp, $(OBJS_DIR)/%.o, $(SRC_FILES))
 DEPENDENCIES  = $(OBJ_FILES:.o=.d)
 
 # Build rules
@@ -21,7 +21,7 @@ $(LIB_DIR)/$(TARGET): $(OBJ_FILES)
 	$(AR) rcs $@ $(OBJ_FILES)
 
 
-$(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJS_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(INC_FLAGS) -MMD -MP -c $< -o $@
 
