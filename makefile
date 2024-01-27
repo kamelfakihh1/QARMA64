@@ -1,5 +1,5 @@
-CC = /home/kamel/old/kamel/cybersecurity-project/llvm-project-base/build/bin/clang++ --target=aarch64-linux-gnu -fuse-ld=lld --sysroot=$(AARCH64_SYSROOT)
-AR = /home/kamel/old/kamel/cybersecurity-project/llvm-project-base/build/bin/llvm-ar
+CC = /home/kamel/old/kamel/cybersecurity-project/llvm-project/build/bin/clang++ --target=aarch64-linux-gnu -fuse-ld=lld --sysroot=$(AARCH64_SYSROOT)
+AR = /home/kamel/old/kamel/cybersecurity-project/llvm-project/build/bin/llvm-ar
 
 CFLAGS     = -g --target=aarch64-linux-gnu --sysroot=/home/kamel/old/kamel/cybersecurity-project/qemu-arm64-machine/debian/aarch64-sysroot/
 INC_FLAGS  = -I./include

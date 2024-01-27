@@ -39,8 +39,8 @@ namespace QARMA64 {
 
 	text_t qarma64_dec(text_t plaintext, tweak_t tweak, key_t w0, key_t k0, int rounds);
 
-	text_t sign_pointer(text_t pointer, tweak_t tweak);
-	text_t verify_pointer(text_t pointer, tweak_t tweak);
+	text_t sign_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0);
+	text_t verify_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0);
 }
 
 #endif
