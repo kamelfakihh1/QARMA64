@@ -1,6 +1,10 @@
 // Copyright (c) 2019-2022 Phantom1003
 #include "QARMA64.h"
 #include <iostream>
+#include <cstdio>
+#include <cstdlib>
+
+#define RANDOM_PATH "/dev/urandom"
 
 namespace QARMA64 {
 
@@ -298,14 +302,57 @@ text_t qarma64_dec(text_t plaintext, tweak_t tweak, key_t w0, key_t k0, int roun
 	return is;
 }
 
+struct Int128 {
+    uint64_t w0;
+    uint64_t k0;
+};
+
+struct Int128 generate_key(){
+
+	// generate 128 bit value and split it into k0 and w0
+	unsigned char buf[16];
+	unsigned long v;
+	FILE *fin;    
+
+	Int128 k;
+
+	if ((fin = fopen(RANDOM_PATH, "r")) == NULL) {
+			fprintf(stderr, "%s: unable to open file\n", RANDOM_PATH);
+			return {0,0};
+	}
+	if (fread(buf, 1, sizeof(buf), fin) != sizeof(buf)) {
+			fprintf(stderr, "%s: not enough bytes (expected %u)\n",
+					RANDOM_PATH, (unsigned) sizeof buf);
+			return {0,0};
+	}
+	fclose(fin);
+
+	for(int i=0; i<16; i++){
+		std::cout << std::hex << int(buf[i]) << " ";
+	}
+	std::cout << std::endl;
+
+	k.w0 = 0;
+	for(int i = 0; i<8; i++){
+		k.w0 |= (((uint64_t) buf[i]) << i*8);		
+	}
+
+	k.k0 = 0;
+	for(int i = 0; i<8; i++){
+		k.k0 |= (((uint64_t) buf[i+8]) << i*8);
+	}
+
+    return k;
+}
+
 text_t sign_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0){	
 
 	text_t ciphertext;
 	text_t signed_pointer;
 	text_t pac;	
 
-	std::cout << "QARMA sign pointer : k0 = " << k0 << std::endl; 
-	std::cout << "QARMA sign pointer : w0 = " << w0 << std::endl; 
+	std::cout << "QARMA sign pointer : k0 = " << std::hex << k0 << std::endl; 
+	std::cout << "QARMA sign pointer : w0 = " << std::hex << w0 << std::endl; 
 
 	pointer = pointer & 0xFFFFFFFFFFFF; 
 	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
@@ -322,8 +369,8 @@ text_t verify_pointer(text_t signed_pointer, tweak_t tweak, key_t k0, key_t w0){
 	text_t ciphertext;
 	text_t pac;
 
-	std::cout << "QARMA verify pointer : k0 = " << k0 << std::endl;
-	std::cout << "QARMA verify pointer : w0 = " << w0 << std::endl;
+	std::cout << "QARMA verify pointer : k0 = " << std::hex << k0 << std::endl;
+	std::cout << "QARMA verify pointer : w0 = " << std::hex << w0 << std::endl;
 
 	text_t pointer = signed_pointer & 0xFFFFFFFFFFFF;
 	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
