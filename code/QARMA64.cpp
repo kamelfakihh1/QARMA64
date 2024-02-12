@@ -326,12 +326,6 @@ struct Int128 generate_key(){
 			return {0,0};
 	}
 	fclose(fin);
-
-	for(int i=0; i<16; i++){
-		std::cout << std::hex << int(buf[i]) << " ";
-	}
-	std::cout << std::endl;
-
 	k.w0 = 0;
 	for(int i = 0; i<8; i++){
 		k.w0 |= (((uint64_t) buf[i]) << i*8);		
@@ -351,15 +345,15 @@ text_t sign_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0){
 	text_t signed_pointer;
 	text_t pac;	
 
-	std::cout << "QARMA sign pointer : k0 = " << std::hex << k0 << std::endl; 
-	std::cout << "QARMA sign pointer : w0 = " << std::hex << w0 << std::endl; 
+	// std::cout << "QARMA sign pointer : k0 = " << std::hex << k0 << std::endl; 
+	// std::cout << "QARMA sign pointer : w0 = " << std::hex << w0 << std::endl; 
 
 	pointer = pointer & 0xFFFFFFFFFFFF; 
 	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
 	pac = ciphertext & 0xFFFF;
 	signed_pointer = pointer | (pac << 48);
 
-	std::cout << "signed pointer" << std::endl;
+	// std::cout << "signed pointer" << std::endl;
 	return signed_pointer;	
 }
 
@@ -369,21 +363,20 @@ text_t verify_pointer(text_t signed_pointer, tweak_t tweak, key_t k0, key_t w0){
 	text_t ciphertext;
 	text_t pac;
 
-	std::cout << "QARMA verify pointer : k0 = " << std::hex << k0 << std::endl;
-	std::cout << "QARMA verify pointer : w0 = " << std::hex << w0 << std::endl;
+	// std::cout << "QARMA verify pointer : k0 = " << std::hex << k0 << std::endl;
+	// std::cout << "QARMA verify pointer : w0 = " << std::hex << w0 << std::endl;
 
 	text_t pointer = signed_pointer & 0xFFFFFFFFFFFF;
 	ciphertext = qarma64_enc(pointer, tweak, w0, k0, 5);	
 	pac = ciphertext & 0xFFFF;
 
 	if((pointer | (pac << 48)) == signed_pointer){
-		std::cout << "valid pointer" << std::endl;
+		// std::cout << "valid pointer" << std::endl;
 		return pointer;
 	}else{
-		std::cout << "invalid pointer" << std::endl;
+		// std::cout << "invalid pointer" << std::endl;
 		return 0xFFFFFFFFFFFFFFFF;
 	}
-	// return signed_pointer;
 }
 
 }
