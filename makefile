@@ -1,7 +1,10 @@
-CC = /home/kamel/old/kamel/cybersecurity-project/llvm-project/build/bin/clang++ --target=aarch64-linux-gnu -fuse-ld=lld --sysroot=$(AARCH64_SYSROOT)
-AR = /home/kamel/old/kamel/cybersecurity-project/llvm-project/build/bin/llvm-ar
+LLVM_BIN ?= /change/to/llvm/bin/path
+SYSROOT_DIR ?= /change/to/aarch64-linux-gnu/sysroot/directory
 
-CFLAGS     = -g --target=aarch64-linux-gnu --sysroot=/home/kamel/old/kamel/cybersecurity-project/qemu-arm64-machine/debian/aarch64-sysroot/ 
+CC = $(LLVM_BIN)/clang++ --target=aarch64-linux-gnu -fuse-ld=lld --sysroot=$(AARCH64_SYSROOT)
+AR = $(LLVM_BIN)/llvm-ar
+
+CFLAGS     = -O3 --target=aarch64-linux-gnu --sysroot=$(SYSROOT_DIR) 
 INC_FLAGS  = -I./include
 
 SRC_DIR   = ./code

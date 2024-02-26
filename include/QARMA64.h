@@ -3,7 +3,9 @@
 
 // Copyright (c) 2019-2022 Phantom1003
 
-#include <stdio.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 
 #define MAX_LENGTH 64
 #define subcells sbox
@@ -16,6 +18,11 @@ namespace QARMA64 {
 	typedef unsigned long long int text_t;
 	typedef unsigned long long int key_t;
 	typedef unsigned char          cell_t;
+
+	struct Int128 {
+		uint64_t w0;
+		uint64_t k0;
+	};	
 
 	void text2cell(cell_t* cell, text_t is);
 
@@ -39,7 +46,10 @@ namespace QARMA64 {
 
 	text_t qarma64_dec(text_t plaintext, tweak_t tweak, key_t w0, key_t k0, int rounds);
 
+	struct Int128 generate_key();
+
 	text_t sign_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0);
+
 	text_t verify_pointer(text_t pointer, tweak_t tweak, key_t k0, key_t w0);
 }
 
